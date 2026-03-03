@@ -1867,14 +1867,11 @@ export default function IFCIntro() {
               marginBottom: 48,
               animation: "fadeUp 0.7s ease both",
             }}>
-              <div style={{
-                fontFamily: FONTS.mono,
-                fontSize: 11,
-                letterSpacing: 4,
-                textTransform: "uppercase",
-                color: C.accent,
-                marginBottom: 16,
-              }}>buildingSMART Norge</div>
+              <img
+                src={import.meta.env.BASE_URL + "logo.png"}
+                alt="buildingSMART Norge"
+                style={{ height: 40, marginBottom: 20 }}
+              />
               <h1 style={{
                 fontFamily: FONTS.display,
                 fontSize: "clamp(36px, 6vw, 56px)",
