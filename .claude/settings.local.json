@@ -2,7 +2,9 @@
   "permissions": {
     "allow": [
       "mcp__claude_ai_Box__get_file_content",
-      "Bash(npx vite build)"
+      "Bash(npx vite build)",
+      "Bash(npm install -D @vitejs/plugin-react-swc)",
+      "Bash(npm uninstall @vitejs/plugin-react)"
     ]
   }
 }
