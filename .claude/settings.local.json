@@ -1,0 +1,7 @@
+{
+  "permissions": {
+    "allow": [
+      "mcp__claude_ai_Box__get_file_content"
+    ]
+  }
+}
