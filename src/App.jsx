@@ -1011,16 +1011,16 @@ function RenderWhatIsIfc({ data, level, levelColor }) {
                 background: C.ink, color: "white", fontFamily: FONTS.mono, fontSize: 14, fontWeight: 700,
               }}>IfcRoot</span>
             </div>
-            <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
+            <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
               {data.ifcRoot.branches.map((b, i) => (
                 <div key={i} style={{
-                  flex: 1, minWidth: 180, padding: "14px 16px", borderRadius: 12,
+                  padding: "14px 16px", borderRadius: 12,
                   background: `${b.color}10`, border: `2px solid ${b.color}30`,
                   animation: `slideRight 0.4s ease ${i * 0.1}s both`,
                 }}>
-                  <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 8 }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 8, flexWrap: "wrap" }}>
                     <span style={{ fontSize: 18 }}>{b.icon}</span>
-                    <span style={{ fontFamily: FONTS.mono, fontSize: 12, fontWeight: 700, color: b.color }}>{b.name}</span>
+                    <span style={{ fontFamily: FONTS.mono, fontSize: 11, fontWeight: 700, color: b.color, wordBreak: "break-all" }}>{b.name}</span>
                   </div>
                   <p style={{ fontFamily: FONTS.body, fontSize: 13, color: C.inkSoft, lineHeight: 1.5, margin: "0 0 8px" }}>{b.desc}</p>
                   <div style={{ display: "flex", flexDirection: "column", gap: 3 }}>
@@ -1920,48 +1920,73 @@ export default function IFCIntro() {
             )}
           </>
         )}
+      </div>
 
-        {showContent && currentLevel && (
+      {/* ── STICKY TOP BAR ── */}
+      {showContent && currentLevel && (
+        <div style={{
+          position: "fixed",
+          top: 0,
+          left: 0,
+          right: 0,
+          zIndex: 100,
+          background: "rgba(255,255,255,0.92)",
+          backdropFilter: "blur(12px)",
+          WebkitBackdropFilter: "blur(12px)",
+          borderBottom: `1px solid ${C.border}`,
+          padding: "10px 20px",
+          animation: "fadeUp 0.3s ease both",
+        }}>
           <div style={{
-            width: "100%",
             maxWidth: 700,
+            margin: "0 auto",
             display: "flex",
             alignItems: "center",
             justifyContent: "space-between",
-            gap: 16,
+            gap: 12,
           }}>
-            <button onClick={handleBack} style={{
-              padding: "8px 18px",
-              borderRadius: 99,
-              border: `1px solid ${C.border}`,
-              background: C.surface,
-              cursor: "pointer",
-              fontFamily: FONTS.body,
-              fontSize: 14,
-              color: C.inkMuted,
-            }}>← Bytt nivå</button>
-            <div style={{
-              display: "flex",
-              alignItems: "center",
-              gap: 10,
-              padding: "8px 18px",
-              borderRadius: 99,
-              background: currentLevel.colorBg,
-              border: `1px solid ${currentLevel.colorBorder}`,
-            }}>
-              <span>{currentLevel.icon}</span>
-              <span style={{ fontFamily: FONTS.display, fontWeight: 700, fontSize: 14, color: currentLevel.color }}>{currentLevel.label}</span>
+            <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
+              <img
+                src={import.meta.env.BASE_URL + "logo.png"}
+                alt="buildingSMART Norge"
+                style={{ height: 22 }}
+              />
+            </div>
+            <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+              <div style={{
+                display: "flex",
+                alignItems: "center",
+                gap: 8,
+                padding: "6px 14px",
+                borderRadius: 99,
+                background: currentLevel.colorBg,
+                border: `1px solid ${currentLevel.colorBorder}`,
+              }}>
+                <span style={{ fontSize: 14 }}>{currentLevel.icon}</span>
+                <span style={{ fontFamily: FONTS.display, fontWeight: 700, fontSize: 13, color: currentLevel.color }}>{currentLevel.label}</span>
+              </div>
+              <button onClick={handleBack} style={{
+                padding: "6px 14px",
+                borderRadius: 99,
+                border: `1px solid ${C.border}`,
+                background: C.surface,
+                cursor: "pointer",
+                fontFamily: FONTS.body,
+                fontSize: 13,
+                color: C.inkMuted,
+                transition: "all 0.2s",
+              }}>← Bytt nivå</button>
             </div>
           </div>
-        )}
-      </div>
+        </div>
+      )}
 
       {/* ── CONTENT ── */}
       {showContent && level && (
         <div ref={contentRef} style={{
           maxWidth: 700,
           margin: "0 auto",
-          padding: "0 20px 80px",
+          padding: "60px 20px 80px",
           animation: "fadeUp 0.6s ease both",
         }}>
           <SectionDivider number="1" color={currentLevel.color} />
