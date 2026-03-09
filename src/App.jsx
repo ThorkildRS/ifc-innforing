@@ -844,20 +844,13 @@ function LevelSelector({ selected, onSelect }) {
                 letterSpacing: 0.3,
               }}>{lvl.roles}</div>
             </div>
-            <div style={{
-              width: 24,
-              height: 24,
-              borderRadius: 99,
-              border: `2px solid ${active ? lvl.color : C.border}`,
-              background: active ? lvl.color : "transparent",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              transition: "all 0.3s",
+            <span style={{
+              fontSize: 18,
+              color: lvl.color,
               flexShrink: 0,
-            }}>
-              {active && <svg width="12" height="12" viewBox="0 0 12 12"><path d="M2 6l3 3 5-5" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>}
-            </div>
+              opacity: 0.5,
+              transition: "all 0.3s",
+            }}>→</span>
           </button>
         );
       })}
@@ -898,9 +891,10 @@ function ContentCard({ children, accent, style: extraStyle }) {
       background: C.surface,
       borderRadius: 14,
       border: `1px solid ${C.border}`,
-      padding: "24px 28px",
+      padding: "20px 18px",
       marginBottom: 16,
       borderLeft: accent ? `4px solid ${accent}` : undefined,
+      overflow: "hidden",
       ...extraStyle,
     }}>{children}</div>
   );
@@ -936,7 +930,7 @@ function RenderWhatIsIfc({ data, level, levelColor }) {
           return (
             <ContentCard key={i}>
               <h3 style={{ fontFamily: FONTS.display, fontSize: 18, color: C.ink, margin: "0 0 16px", fontWeight: 700 }}>{block.title}</h3>
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 10 }}>
                 {block.items.map((item, j) => (
                   <div key={j} style={{
                     padding: "14px 16px",
@@ -1060,7 +1054,7 @@ function RenderWhatIsIfc({ data, level, levelColor }) {
         <div style={{ marginTop: 20 }}>
           <h3 style={{ fontFamily: FONTS.display, fontSize: 18, color: C.ink, margin: "0 0 6px", fontWeight: 700 }}>{data.domains.title}</h3>
           <p style={{ fontFamily: FONTS.body, fontSize: 14, color: C.inkMuted, lineHeight: 1.6, margin: "0 0 14px" }}>{data.domains.lead}</p>
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 10 }}>
             {data.domains.items.map((d, i) => (
               <div key={i} style={{ padding: "12px 14px", borderRadius: 10, background: C.bgWarm, border: `1px solid ${C.borderLight}` }}>
                 <span style={{ fontSize: 18, marginRight: 8 }}>{d.icon}</span>
@@ -1093,30 +1087,33 @@ function RenderStructure({ data, level, levelColor }) {
         <h2 style={{ fontFamily: FONTS.display, fontSize: "clamp(24px, 4vw, 32px)", color: C.ink, margin: "0 0 12px", fontWeight: 800, lineHeight: 1.2 }}>{data.title}</h2>
         <p style={{ fontFamily: FONTS.body, fontSize: 17, color: C.inkSoft, lineHeight: 1.7, margin: "0 0 8px" }}>{data.lead}</p>
         <p style={{ fontFamily: FONTS.body, fontSize: 15, color: C.inkMuted, lineHeight: 1.7, margin: "0 0 28px" }}>{data.intro}</p>
-        <ContentCard>
+        <ContentCard style={{ padding: "20px 18px", overflow: "hidden" }}>
           <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
             {data.hierarchy.map((node, i) => (
               <div key={i} style={{
-                marginLeft: node.depth * 32,
+                marginLeft: node.depth * 20,
                 display: "flex",
-                alignItems: "center",
-                gap: 12,
+                flexDirection: "column",
+                gap: 2,
                 animation: `slideRight 0.4s ease ${i * 0.07}s both`,
               }}>
-                {node.depth > 0 && <div style={{ width: 16, height: 2, background: C.border }} />}
-                <div style={{
-                  padding: "10px 16px",
-                  borderRadius: 10,
-                  background: C.greenBg,
-                  border: `1px solid ${C.greenBorder}`,
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 10,
-                }}>
-                  <span style={{ fontFamily: FONTS.display, fontWeight: 700, fontSize: 14, color: C.green }}>{node.label}</span>
-                  <span style={{ fontFamily: FONTS.mono, fontSize: 11, color: C.inkFaint }}>{node.entity}</span>
+                <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                  {node.depth > 0 && <div style={{ width: 12, height: 2, background: C.border, flexShrink: 0 }} />}
+                  <div style={{
+                    padding: "8px 12px",
+                    borderRadius: 8,
+                    background: C.greenBg,
+                    border: `1px solid ${C.greenBorder}`,
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 8,
+                    flexWrap: "wrap",
+                  }}>
+                    <span style={{ fontFamily: FONTS.display, fontWeight: 700, fontSize: 13, color: C.green }}>{node.label}</span>
+                    <span style={{ fontFamily: FONTS.mono, fontSize: 10, color: C.inkFaint }}>{node.entity}</span>
+                  </div>
                 </div>
-                <span style={{ fontFamily: FONTS.body, fontSize: 13, color: C.inkMuted }}>{node.desc}</span>
+                <div style={{ marginLeft: node.depth > 0 ? 22 : 0, fontFamily: FONTS.body, fontSize: 12, color: C.inkMuted, lineHeight: 1.4 }}>{node.desc}</div>
               </div>
             ))}
           </div>
@@ -1262,19 +1259,18 @@ function RenderRelations({ data, level, levelColor }) {
           <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
             {data.connections.map((conn, i) => (
               <div key={i} style={{
-                display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap",
+                display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap",
                 animation: `slideRight 0.4s ease ${i * 0.08}s both`,
               }}>
-                <div style={{ padding: "8px 14px", borderRadius: 10, background: C.bgWarm, border: `1px solid ${C.borderLight}`, fontFamily: FONTS.display, fontSize: 14, fontWeight: 700, color: C.ink, whiteSpace: "nowrap" }}>
+                <div style={{ padding: "6px 10px", borderRadius: 8, background: C.bgWarm, border: `1px solid ${C.borderLight}`, fontFamily: FONTS.display, fontSize: 13, fontWeight: 700, color: C.ink }}>
                   {conn.from}
                 </div>
-                <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-                  <div style={{ width: 24, height: 2, background: conn.color }} />
-                  <span style={{ fontFamily: FONTS.mono, fontSize: 11, color: conn.color, fontWeight: 700, whiteSpace: "nowrap" }}>{conn.relation}</span>
-                  <div style={{ width: 24, height: 2, background: conn.color }} />
-                  <span style={{ color: conn.color }}>→</span>
+                <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
+                  <div style={{ width: 12, height: 2, background: conn.color }} />
+                  <span style={{ fontFamily: FONTS.mono, fontSize: 10, color: conn.color, fontWeight: 700 }}>{conn.relation}</span>
+                  <span style={{ color: conn.color, fontSize: 12 }}>→</span>
                 </div>
-                <div style={{ padding: "8px 14px", borderRadius: 10, background: `${conn.color}10`, border: `1px solid ${conn.color}30`, fontFamily: FONTS.display, fontSize: 14, fontWeight: 700, color: C.ink, whiteSpace: "nowrap" }}>
+                <div style={{ padding: "6px 10px", borderRadius: 8, background: `${conn.color}10`, border: `1px solid ${conn.color}30`, fontFamily: FONTS.display, fontSize: 13, fontWeight: 700, color: C.ink }}>
                   {conn.to}
                 </div>
               </div>
@@ -1454,7 +1450,7 @@ function RenderInfrastructure({ data, level, levelColor }) {
         <h2 style={{ fontFamily: FONTS.display, fontSize: "clamp(24px, 4vw, 32px)", color: C.ink, margin: "0 0 12px", fontWeight: 800, lineHeight: 1.2 }}>{data.title}</h2>
         <p style={{ fontFamily: FONTS.body, fontSize: 17, color: C.inkSoft, lineHeight: 1.7, margin: "0 0 8px" }}>{data.lead}</p>
         <p style={{ fontFamily: FONTS.body, fontSize: 15, color: C.inkMuted, lineHeight: 1.7, margin: "0 0 24px" }}>{data.content}</p>
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 12 }}>
           {data.items.map((item, i) => (
             <ContentCard key={i} style={{ marginBottom: 0 }}>
               <div style={{ display: "flex", alignItems: "flex-start", gap: 10 }}>
@@ -1672,7 +1668,7 @@ function RenderGeometry({ data, level, levelColor }) {
           return (
             <ContentCard accent={g.color}>
               <h3 style={{ fontFamily: FONTS.display, fontSize: 18, color: C.ink, margin: "0 0 16px", fontWeight: 700 }}>{g.name}</h3>
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginBottom: 12 }}>
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 12, marginBottom: 12 }}>
                 <div style={{ padding: "12px 14px", borderRadius: 8, background: C.greenBg, border: `1px solid ${C.greenBorder}` }}>
                   <div style={{ fontFamily: FONTS.mono, fontSize: 11, color: C.green, fontWeight: 700, marginBottom: 4 }}>FORDEL</div>
                   <div style={{ fontFamily: FONTS.body, fontSize: 14, color: C.inkSoft, lineHeight: 1.5 }}>{g.pro}</div>
@@ -1811,10 +1807,6 @@ export default function IFCIntro() {
 
   const handleSelect = (id) => {
     setLevel(id);
-    setShowContent(false);
-  };
-
-  const handleStart = () => {
     setShowContent(true);
     setTimeout(() => {
       contentRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -1825,6 +1817,16 @@ export default function IFCIntro() {
     setShowContent(false);
     setLevel(null);
     window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  const nextLevelId = level === "ny" ? "bruker" : level === "bruker" ? "bestiller" : null;
+  const nextLevel = nextLevelId ? LEVELS.find(l => l.id === nextLevelId) : null;
+
+  const handleNextLevel = () => {
+    if (nextLevelId) {
+      setLevel(nextLevelId);
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
   };
 
   const sectionLabels = [
@@ -1848,79 +1850,59 @@ export default function IFCIntro() {
         @keyframes slideRight { from { opacity:0; transform: translateX(-16px); } to { opacity:1; transform: translateX(0); } }
         @keyframes fadeUp { from { opacity:0; transform: translateY(20px); } to { opacity:1; transform: translateY(0); } }
         html { scroll-behavior: smooth; }
+        @media (max-width: 600px) {
+          .level-badge-desktop { display: none !important; }
+        }
       `}</style>
 
       {/* ── HERO / SELECTION ── */}
-      <div style={{
-        minHeight: showContent ? "auto" : "100vh",
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        justifyContent: showContent ? "flex-start" : "center",
-        padding: showContent ? "40px 20px 20px" : "40px 20px",
-        transition: "all 0.5s ease",
-      }}>
-        {!showContent && (
-          <>
-            <div style={{
-              textAlign: "center",
-              marginBottom: 48,
-              animation: "fadeUp 0.7s ease both",
+      {!showContent && (
+        <div style={{
+          minHeight: "100vh",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+          padding: "40px 20px",
+        }}>
+          <div style={{
+            textAlign: "center",
+            marginBottom: 48,
+            animation: "fadeUp 0.7s ease both",
+          }}>
+            <img
+              src={import.meta.env.BASE_URL + "logo.png"}
+              alt="buildingSMART Norge"
+              style={{ height: 40, marginBottom: 20 }}
+            />
+            <h1 style={{
+              fontFamily: FONTS.display,
+              fontSize: "clamp(36px, 6vw, 56px)",
+              fontWeight: 800,
+              color: C.ink,
+              lineHeight: 1.1,
+              margin: "0 0 12px",
+              letterSpacing: "-0.02em",
             }}>
-              <img
-                src={import.meta.env.BASE_URL + "logo.png"}
-                alt="buildingSMART Norge"
-                style={{ height: 40, marginBottom: 20 }}
-              />
-              <h1 style={{
-                fontFamily: FONTS.display,
-                fontSize: "clamp(36px, 6vw, 56px)",
-                fontWeight: 800,
-                color: C.ink,
-                lineHeight: 1.1,
-                margin: "0 0 12px",
-                letterSpacing: "-0.02em",
-              }}>
-                Innføring i IFC
-              </h1>
-              <p style={{
-                fontFamily: FONTS.body,
-                fontSize: "clamp(16px, 2.5vw, 20px)",
-                color: C.inkMuted,
-                maxWidth: 520,
-                margin: "0 auto",
-                lineHeight: 1.5,
-              }}>
-                Velg ditt erfaringsnivå – innholdet tilpasses deg
-              </p>
-            </div>
+              Innføring i IFC
+            </h1>
+            <p style={{
+              fontFamily: FONTS.body,
+              fontSize: "clamp(16px, 2.5vw, 20px)",
+              color: C.inkMuted,
+              maxWidth: 520,
+              margin: "0 auto",
+              lineHeight: 1.5,
+            }}>
+              Velg ditt erfaringsnivå – innholdet tilpasses deg
+            </p>
+          </div>
 
-            <div style={{ animation: "fadeUp 0.7s ease 0.15s both", width: "100%", maxWidth: 680 }}>
-              <LevelSelector selected={level} onSelect={handleSelect} />
-            </div>
-
-            {level && (
-              <button onClick={handleStart} style={{
-                marginTop: 32,
-                padding: "16px 48px",
-                borderRadius: 99,
-                border: "none",
-                background: currentLevel.color,
-                color: "white",
-                fontSize: 16,
-                fontWeight: 700,
-                fontFamily: FONTS.body,
-                cursor: "pointer",
-                transition: "all 0.3s",
-                animation: "fadeUp 0.4s ease both",
-                boxShadow: `0 4px 20px ${currentLevel.color}33`,
-              }}>
-                Start innføringen →
-              </button>
-            )}
-          </>
-        )}
-      </div>
+          <div style={{ animation: "fadeUp 0.7s ease 0.15s both", width: "100%", maxWidth: 680 }}>
+            <LevelSelector selected={level} onSelect={handleSelect} />
+          </div>
+        </div>
+      )}
 
       {/* ── STICKY TOP BAR ── */}
       {showContent && currentLevel && (
@@ -1934,7 +1916,7 @@ export default function IFCIntro() {
           backdropFilter: "blur(12px)",
           WebkitBackdropFilter: "blur(12px)",
           borderBottom: `1px solid ${C.border}`,
-          padding: "10px 20px",
+          padding: "14px 20px",
           animation: "fadeUp 0.3s ease both",
         }}>
           <div style={{
@@ -1949,11 +1931,11 @@ export default function IFCIntro() {
               <img
                 src={import.meta.env.BASE_URL + "logo.png"}
                 alt="buildingSMART Norge"
-                style={{ height: 22 }}
+                style={{ height: 28 }}
               />
             </div>
             <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-              <div style={{
+              <div className="level-badge-desktop" style={{
                 display: "flex",
                 alignItems: "center",
                 gap: 8,
@@ -1986,7 +1968,7 @@ export default function IFCIntro() {
         <div ref={contentRef} style={{
           maxWidth: 700,
           margin: "0 auto",
-          padding: "60px 20px 80px",
+          padding: "70px 16px 80px",
           animation: "fadeUp 0.6s ease both",
         }}>
           <SectionDivider number="1" color={currentLevel.color} />
@@ -2029,17 +2011,51 @@ export default function IFCIntro() {
             <p style={{ fontFamily: FONTS.body, fontSize: 15, color: C.inkMuted, margin: "0 0 20px", lineHeight: 1.6 }}>
               Denne innføringen er basert på veilederen «IFC for begynnere» fra buildingSMART Norge. For fullstendig innhold og teknisk dokumentasjon, se den offisielle veilederen.
             </p>
-            <button onClick={handleBack} style={{
-              padding: "12px 32px",
-              borderRadius: 99,
-              border: `2px solid ${currentLevel.color}`,
-              background: "transparent",
-              color: currentLevel.color,
-              fontSize: 14,
-              fontWeight: 700,
-              fontFamily: FONTS.body,
-              cursor: "pointer",
-            }}>Prøv et annet nivå</button>
+            <div style={{ display: "flex", flexDirection: "column", gap: 10, alignItems: "center" }}>
+              {nextLevel && (
+                <button onClick={handleNextLevel} style={{
+                  padding: "12px 32px",
+                  borderRadius: 99,
+                  border: "none",
+                  background: nextLevel.color,
+                  color: "white",
+                  fontSize: 14,
+                  fontWeight: 700,
+                  fontFamily: FONTS.body,
+                  cursor: "pointer",
+                  boxShadow: `0 4px 20px ${nextLevel.color}33`,
+                  transition: "all 0.3s",
+                }}>{nextLevel.icon} Gå til neste nivå – {nextLevel.label}</button>
+              )}
+              {!nextLevel && (
+                <a href="https://www.buildingsmart.no/pofin" target="_blank" rel="noopener noreferrer" style={{
+                  display: "inline-block",
+                  padding: "12px 32px",
+                  borderRadius: 99,
+                  border: "none",
+                  background: currentLevel.color,
+                  color: "white",
+                  fontSize: 14,
+                  fontWeight: 700,
+                  fontFamily: FONTS.body,
+                  cursor: "pointer",
+                  textDecoration: "none",
+                  boxShadow: `0 4px 20px ${currentLevel.color}33`,
+                  transition: "all 0.3s",
+                }}>Ta det neste steget med åpenBIM →</a>
+              )}
+              <button onClick={handleBack} style={{
+                padding: "10px 24px",
+                borderRadius: 99,
+                border: `1px solid ${C.border}`,
+                background: "transparent",
+                color: C.inkMuted,
+                fontSize: 13,
+                fontWeight: 600,
+                fontFamily: FONTS.body,
+                cursor: "pointer",
+              }}>Prøv et annet nivå</button>
+            </div>
           </div>
 
           <footer style={{
